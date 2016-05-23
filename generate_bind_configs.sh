@@ -4,8 +4,9 @@ set -eu
 
 file=$1
 ip=$2
+fakezoneroot=/opt/named_fakezone_generator/
 zones=/etc/named.reductor.zones
-DOMAIN_TMPLT=/opt/named_fakezone_generator/reductor_named_domain.tmplt
+DOMAIN_TMPLT=$fakezoneroot/reductor_named_domain.tmplt
 
 # удаляем сгенерированные в прошлый раз зоны, префикс чтобы не трогать чужие зоны при этом
 cleanup() {
@@ -17,7 +18,7 @@ cleanup() {
 
 # с кириллическими доменами пока что проблема, вообще здесь избавляемся от дублирования из-за fqdn/www.
 process_list() {
-	grep -v "[а-я]" | sed 's/\.$//' | sed -e 's/^www\.//' | sort -u
+	sed 's/\.$//' | sed -e 's/^www\.//' | python -u $fakezoneroot/idna_fix.py | sort -u
 }
 
 # генерируем всё необходимое для блокировки одного конкретного домена
