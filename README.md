@@ -21,7 +21,7 @@
 В случае CentOS 6 установка будет выглядеть следующим образом:
 
     yum -y install git m4
-    git clone git@github.com:strizhechenko/named_fakezone_generator.git /opt/named_fakezone_generator/
+    git clone git@github.com:carbonsoft/named_fakezone_generator.git /opt/named_fakezone_generator/
 
 Допишите в конец файла /etc/named.conf:
 
