@@ -6,6 +6,7 @@ file=$1
 ip=$2
 fakezoneroot=/opt/named_fakezone_generator/
 zones=/etc/named.reductor.zones
+hook=/etc/sysconfig/named_fakezone_generator
 DOMAIN_TMPLT=$fakezoneroot/reductor_named_domain.tmplt
 
 # удаляем сгенерированные в прошлый раз зоны, префикс чтобы не трогать чужие зоны при этом
@@ -29,19 +30,34 @@ create_config() {
 	m4 -D__domain__=$domain -D__ip__=$ip $DOMAIN_TMPLT > "/etc/named/reductor_$domain.conf"
 }
 
-main() {
-	cleanup
-	process_list < $file > $file.processed
-	if [ ! -s $file.processed ]; then
-		echo "Empty $file.processed, fail"
+check_output() {
+	if [ ! -s $1 ]; then
+		echo "Empty $1, fail"
 		exit 1
 	fi
+
+}
+
+generate_zones() {
 	while read domain; do
 		create_config $domain $ip
-	done < $file.processed
-	# стараемся залить данные "мягко", но сервер может лежать, тогда поднимаем его
-	# вообще спорный момент, в теории можно убрать || service named restart
+	done
+
+}
+
+# стараемся залить данные "мягко", но сервер может лежать, тогда поднимаем его
+# вообще спорный момент, в теории можно убрать || service named restart
+apply_zones() {
 	rndc reload || service named restart
 }
 
+main() {
+	cleanup
+	process_list < $file > $file.processed
+	check_output $file.processed
+	generate_zones < $file.processed
+	apply_zones
+}
+
+[ -f $hook ] && . $hook
 main
