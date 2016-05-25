@@ -39,9 +39,13 @@
 
 ## Автоматизация
 
+### Генерация зон
+
 Если всё устраивает - добавьте вызов в крон, например так:
 
     echo '*/20 * * * * root /opt/named_fakezone_generator/generate_bind_configs.sh /tmp/reductor.https.resolv 10.50.140.73' > /etc/cron.d/named_fakezone_generator
+
+### Получение списка доменов
 
 Не забудьте добавить запись, которая периодически забирает файл https.resolv с Carbon Reductor. Это можно сделать следующим образом:
 
