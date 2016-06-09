@@ -1,0 +1,14 @@
+[root@unbound unbound]# cat main.sh.example 
+#!/bin/bash
+
+set -eu
+
+REDUCTOR_IP=10.0.0.1
+
+# чтобы scp не спрашивал пароль нужно создать ssh-ключи и закинуть их с помощью ssh-copy-id на carbon reductor
+scp root@$REDUCTOR_IP:/usr/local/Reductor/userinfo/config /tmp/reductor.config
+scp root@$REDUCTOR_IP:/usr/local/Reductor/lists/https.resolv /tmp/reductor.https.resolv
+
+. /tmp/reductor.config
+
+/opt/named_fakezone_generator/unbound/generate_unbound_configs.sh /tmp/reductor.https.resolv "${filter['dns_ip']}"
