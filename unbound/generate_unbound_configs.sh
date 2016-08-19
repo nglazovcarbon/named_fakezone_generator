@@ -25,7 +25,11 @@ process_list() {
 create_config() {
 	local domain=$1
 	local ip=$2
-	echo 'local-zone: "'$domain'" redirect'
+	if [ "$domain" = 'issuu.com' ]; then
+		echo 'local-zone: "'$domain'" transparent'
+	else
+		echo 'local-zone: "'$domain'" redirect'
+	fi
 	echo 'local-data: "'$domain' A '$ip'"'
 }
 
