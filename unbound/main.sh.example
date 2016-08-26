@@ -2,6 +2,13 @@
 
 set -eu
 
+LOCKFILE=/tmp/fakezone_generator.lock
+exec 3>$LOCKFILE
+
+if ! flock -w 60 -x 3; then
+	echo "Не удалось захватить lock fakezone_generator"
+	exit 1
+fi
 REDUCTOR_IP=10.0.0.1
 
 # чтобы scp не спрашивал пароль нужно создать ssh-ключи и закинуть их с помощью ssh-copy-id на carbon reductor
@@ -11,3 +18,4 @@ scp root@$REDUCTOR_IP:/usr/local/Reductor/lists/https.resolv /tmp/reductor.https
 . /tmp/reductor.config
 
 /opt/named_fakezone_generator/unbound/generate_unbound_configs.sh /tmp/reductor.https.resolv "${filter['dns_ip']}"
+flock -u 3
