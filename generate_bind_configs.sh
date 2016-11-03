@@ -13,21 +13,13 @@ DOMAIN_TMPLT=$fakezoneroot/reductor_named_domain.tmplt
 cleanup() {
 	> $zones
 	mkdir -p /etc/named/
-	rm -f /etc/named/reductor_*
+	find /etc/named/ -type f -name "reductor_*" -delete
 	rm -f $file.processed
 }
 
 # с кириллическими доменами пока что проблема, вообще здесь избавляемся от дублирования из-за fqdn/www.
 process_list() {
 	sed 's/\.$//' | sed -e 's/^www\.//' | python -u $fakezoneroot/idna_fix.py | sort -u
-}
-
-# генерируем всё необходимое для блокировки одного конкретного домена
-create_config() {
-	local domain="${1//_/-}"
-	local ip=$2
-	echo 'zone "'$domain'" { type master; file "/etc/named/reductor_'$domain'.conf"; };' >> $zones
-	m4 -D__domain__=$domain -D__ip__=$ip $DOMAIN_TMPLT > "/etc/named/reductor_$domain.conf"
 }
 
 check_output() {
@@ -40,8 +32,9 @@ check_output() {
 
 generate_zones() {
 	while read domain; do
-		create_config $domain $ip
-	done
+		echo 'zone "'${domain//_/-}'" { type master; file "/etc/named/reductor_zones.conf"; };'
+	done > $zones
+	m4 -Udnl -D__domain__=${NS_GLOBAL:-denypage.ru} -D__ip__=$ip $DOMAIN_TMPLT >> "/etc/named/reductor_zones.conf"
 
 }
 
