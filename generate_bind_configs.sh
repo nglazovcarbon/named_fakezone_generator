@@ -24,7 +24,7 @@ process_list() {
 
 # генерируем всё необходимое для блокировки одного конкретного домена
 create_config() {
-	local domain=$1
+	local domain="${1//_/-}"
 	local ip=$2
 	echo 'zone "'$domain'" { type master; file "/etc/named/reductor_'$domain'.conf"; };' >> $zones
 	m4 -D__domain__=$domain -D__ip__=$ip $DOMAIN_TMPLT > "/etc/named/reductor_$domain.conf"
