@@ -21,7 +21,7 @@ mkdir /var/run/unbound
 unbound-control-setup
 service unbound restart
 ```
-
+Обратите внимание, что в конфиге в секции ```server:``` должен подключаться файл ```/etc/unbound/local.d/reductor.conf```. Это может выглядеть так ```include: /etc/unbound/local.d/reductor.conf``` или (обычно из коробки) так ```include: /etc/unbound/local.d/*.conf```
 В случае CentOS 6 установка будет выглядеть следующим образом:
 
 ```
