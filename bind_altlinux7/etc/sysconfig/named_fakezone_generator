@@ -1,0 +1,8 @@
+REDUCTOR_IP=10.0.0.1
+
+# only if you work in chroot
+ZONES_CONF=/var/lib/bind/etc/named/reductor_zones.conf
+ZONES=/var/lib/bind/etc/named.reductor.zones
+
+# even if you work in chroot
+ZONES_CONF_PATH=/etc/named/reductor_zones.conf
