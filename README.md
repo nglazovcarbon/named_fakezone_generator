@@ -71,17 +71,34 @@ git pull origin master
 
 Проверяем что scp не запрашивает пароль и выкачивает файл:
 
-    scp root@<ip адрес carbon reductor>:/usr/local/Reductor/lists/https.resolv /tmp/reductor.https.resolv
+- Для Reductor 7
+```
+scp root@<ip адрес carbon reductor>:/usr/local/Reductor/lists/https.resolv /tmp/reductor.https.resolv
+```
+- Для Reductor 8
+```
+ scp root@<ip адрес carbon reductor>:/app/reductor/var/lib/reductor/lists/tmp/domains.all /tmp/reductor.https.resolv
+```
 
-При сильном желании, если хочется держать и менять IP адрес заглушки в одном месте, можно забирать аналогично с Carbon Reductor файл /usr/local/Reductor/userinfo/config внутри обёртки в духе, которую вызывать по крону:
+При сильном желании, если хочется держать и менять IP адрес заглушки в одном месте, 
+можно забирать аналогично с Carbon Reductor конфигурационный файл внутри скрипта, который можно вызывать по крону:
 
+- Для Reductor 7
+```
     #!/bin/bash
         
     scp root@<ip адрес carbon reductor>:/usr/local/Reductor/userinfo/config /tmp/reductor.config
     scp root@<ip адрес carbon reductor>:/usr/local/Reductor/lists/https.resolv /tmp/reductor.https.resolv
     source /tmp/reductor.config
     /opt/named_fakezone_generator/generate_bind_configs.sh /tmp/reductor.https.resolv "${filter['dns_ip']}"
-
+```
+- Для Reductor 8
+```
+    scp root@<ip адрес carbon reductor>:/app/reductor/cfg/config /tmp/reductor.config
+    scp root@<ip адрес carbon reductor>:/app/reductor/var/lib/reductor/lists/tmp/domains.all /tmp/reductor.https.resolv
+    source /tmp/reductor.config
+    /opt/named_fakezone_generator/generate_bind_configs.sh /tmp/reductor.https.resolv "${filter['dns_ip']}"
+```
 ## Принцип действия
 
 Генерирует следующие файлы:
