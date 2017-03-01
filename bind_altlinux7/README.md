@@ -1,6 +1,6 @@
 # Named fakezone generator
 
-**Версия для altlinux 7 с bash3.2 и bind, работающем в chroot**
+**Версия для систем с bash3.2 и bind, работающем в chroot (тестировалось на altlinux 7, принципиальных зависящих от дистрибутива моментов нет)**
 
 Генератор зон для named/bind9 для списка доменов, которые необходимо перекидывать на заглушку, настроенную по гайду https://github.com/carbonsoft/reductor_blockpages
 
